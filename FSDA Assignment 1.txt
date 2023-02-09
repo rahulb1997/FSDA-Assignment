@@ -1,0 +1,128 @@
+-- TASK 1
+
+CREATE OR REPLACE WAREHOUSE RB_WAREHOUSE
+WAREHOUSE_SIZE = MEDIUM;
+
+CREATE DATABASE SHOPPING;
+
+USE SHOPPING;
+
+CREATE TABLE SHOPPING_HISTORY(
+PRODUCT VARCHAR NOT NULL,
+QUANTITY INTEGER NOT NULL,
+UNIT_PRICE INTEGER NOT NULL
+);
+
+INSERT INTO SHOPPING_HISTORY(PRODUCT, QUANTITY, UNIT_PRICE) VALUES 
+('MILK', 2, 5),
+('OIL', 5, 6),
+('CHEESE', 3, 6),
+('GHEE', 1, 10),
+('MILK', 6, 6),
+('CHAWANPRASH', 2, 11),
+('MUESLI', 2, 8),
+('CHEESE', 2, 7),
+('MILK', 4, 7),
+('OIL', 4, 7),
+('CHAWANPRASH', 2, 12),
+('MUESLI', 4, 10),
+('GHEE', 2, 11),
+('MILK', 2, 5) ;
+
+SELECT * FROM SHOPPING_HISTORY;
+
+--       ###################### QUESTION ######################
+
+-- Q1. Write an SQL query for each product returns the total amount spent on it. Rows should be ordered in descending alphabetical      order by product.
+
+SELECT PRODUCT, sum(QUANTITY*UNIT_PRICE) FROM SHOPPING_HISTORY
+GROUP BY PRODUCT
+ORDER BY PRODUCT DESC;
+
+-- ====================================================================
+ 
+-- TASK 2
+
+CREATE TABLE PHONES(
+NAME VARCHAR(50) NOT NULL UNIQUE,
+PHONE_NUMBER INTEGER NOT NULL UNIQUE
+);
+
+CREATE TABLE CALLS(
+ID INTEGER NOT NULL,
+CALLER INTEGER NOT NULL,
+CALLEE INTEGER NOT NULL,
+DURATION INTEGER NOT NULL,
+UNIQUE(ID)
+);
+
+INSERT INTO PHONES(NAME, PHONE_NUMBER) VALUES
+('JOHN', 123456),
+('ROCKY', 98745),
+('REBECCA', 84562),
+('LINDA', 98657),
+('SAM', 15263) ;
+
+INSERT INTO CALLS(ID, CALLER, CALLEE, DURATION) VALUES
+(1, 123456, 98745, 3),
+(20, 15263, 0000, 28),
+(2, 123456, 98745, 5),
+(3, 123456, 98745, 6),
+(4, 98657, 0000, 12),
+(56, 98657, 0000, 17),
+(10, 84562, 15263, 45),
+(11, 84562, 15263, 3),
+(12, 15263, 84562, 63),
+(13, 98745, 123456, 2),
+(22, 98745, 123456, 1),
+(21, 98745, 123456, 1),
+(311, 15263, 84562, 25),
+(111, 15263, 84562, 5) ;
+
+
+CREATE TABLE JOINED_TABLE AS 
+SELECT * FROM CALLS LEFT OUTER JOIN PHONES ON PHONE_NUMBER= CALLER;
+
+--       ###################### QUESTION ######################
+--Q1. Write an SQL query that finds all clients who talked at least 10 minutes in total. The table of results should contain one column :the name of the client.Rows should be sorted alphabetically. 
+
+SELECT NAME FROM JOINED_TABLE
+GROUP BY NAME
+HAVING sum(DURATION) > 10
+ORDER BY NAME;
+
+-- ====================================================================
+
+-- TASK 3
+
+CREATE TABLE TRANSACTIONS(
+AMOUNT INTEGER NOT NULL,
+DATE DATE NOT NULL
+);
+
+INSERT INTO TRANSACTIONS(AMOUNT, DATE) VALUES
+(1000, '2020-01-06'),
+(-10, '2020-01-14'),
+(-75, '2020-01-20'),
+(-5, '2020-01-25'),
+(-4, '2020-01-29'),
+(2000, '2020-03-10'),
+(-75, '2020-03-12'),
+(-20, '2020-03-15'),
+(40, '2020-03-15'),
+(-50, '2020-03-17'),
+(200, '2020-10-10'),
+(-200, '2020-10-10'); 
+
+
+--       ###################### QUESTION ######################
+
+-- Ques: Write an SQL query that returns a table containing one column, balance. The table should contain one row with the total balance of your account at the end of the year, including the fee for holding a credit card. 
+
+select sum(amount)-11*5 from transactions;
+
+
+
+
+
+
